@@ -1,0 +1,6 @@
+MALNAD COLLEGE OF ENGINEERING
+23CS SCHEME: 23CSL505 - Computer Networks Laboratory
+Experiments:
+1. Multi-threaded TCP client-server echo application.
+2. Simulation of Sliding Window flow control (Go-Back-N).
+3. Cisco Packet Tracer configuration for VLANs.

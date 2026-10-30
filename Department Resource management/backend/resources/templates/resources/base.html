@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Department Resource Sharing Portal{% endblock %} - MCE Hassan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+  <!-- Navbar -->
+  <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <!-- Logo -->
+        <div class="flex items-center space-x-3">
+          <a href="{% url 'home' %}" class="flex items-center space-x-2">
+            <span class="text-xl font-bold text-blue-600">ResourcePortal</span>
+          </a>
+        </div>
+
+        <!-- Center links -->
+        <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+          {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="hover:text-blue-600 transition">Dashboard</a>
+            <a href="{% url 'resource_list' %}" class="hover:text-blue-600 transition">Browse Resources</a>
+            {% if user.profile.role == 'ROLE_FACULTY' or user.profile.role == 'ROLE_ADMIN' %}
+              <a href="{% url 'upload_resource' %}" class="hover:text-blue-600 transition">Upload Material</a>
+            {% endif %}
+            {% if user.profile.role == 'ROLE_STUDENT' %}
+              <a href="{% url 'request_resource' %}" class="hover:text-blue-600 transition">Request Resource</a>
+            {% endif %}
+            {% if user.is_staff or user.profile.role == 'ROLE_ADMIN' %}
+              <a href="/admin/" target="_blank" class="hover:text-blue-600 text-purple-600 font-semibold transition">Django Admin</a>
+            {% endif %}
+          {% else %}
+            <a href="#features" class="hover:text-blue-600 transition">Features</a>
+            <a href="#how-it-works" class="hover:text-blue-600 transition">How It Works</a>
+            <a href="#testimonials" class="hover:text-blue-600 transition">Testimonials</a>
+          {% endif %}
+        </div>
+
+        <!-- Right actions -->
+        <div class="flex items-center space-x-4">
+          {% if user.is_authenticated %}
+            <span class="text-sm font-medium text-slate-700 hidden sm:inline">
+              Welcome, <span class="font-bold text-blue-600">{{ user.first_name|default:user.username }}</span>
+              <span class="ml-1 text-xs px-2 py-0.5 rounded-full {% if user.profile.role == 'ROLE_ADMIN' %}bg-purple-100 text-purple-700{% elif user.profile.role == 'ROLE_FACULTY' %}bg-blue-100 text-blue-700{% else %}bg-green-100 text-green-700{% endif %}">
+                {% if user.profile.role == 'ROLE_ADMIN' %}Admin{% elif user.profile.role == 'ROLE_FACULTY' %}Faculty{% else %}Student{% endif %}
+              </span>
+            </span>
+            <a href="{% url 'logout' %}" class="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded shadow transition">Logout</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="text-sm font-semibold text-slate-700 hover:text-blue-600 transition">Login</a>
+            <a href="{% url 'register' %}" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded shadow transition">Get Started</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Messages Flash -->
+  {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 mt-4 w-full">
+      {% for message in messages %}
+        <div class="p-3 mb-2 rounded text-sm {% if message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200{% else %}bg-green-50 text-green-700 border border-green-200{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Main Content -->
+  <main class="flex-grow">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-12">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div>
+        <span class="font-bold text-slate-700">Malnad College of Engineering, Hassan</span>
+        <span class="mx-2">•</span>
+        <span>Department of Information Science and Engineering</span>
+      </div>
+      <div class="text-slate-400">
+        Mini Project (23IS503) · Anitha U S · Apeksha A R · Impana C · Jhansirani Y C · Under Guidance of Mr. Nithin K
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
